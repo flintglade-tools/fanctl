@@ -41,6 +41,8 @@ udevadm control --reload
 cat > /etc/systemd/system/nct6687-rs.service <<UNIT
 [Unit]
 Description=Build (after kernel updates) and load the nct6687_rs fan driver
+Wants=network-online.target
+After=network-online.target
 
 [Service]
 Type=oneshot

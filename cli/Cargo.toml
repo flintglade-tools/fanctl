@@ -3,7 +3,7 @@ name = "fanctl"
 version = "0.1.0"
 edition = "2024"
 description = "Read and control the MSI PRO Z690-A WIFI fan headers through the nct6687_rs driver"
-license = "GPL-2.0"
+license = "GPL-2.0-or-later"
 
 [dependencies]
 libc = "0.2"

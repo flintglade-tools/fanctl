@@ -37,6 +37,6 @@ jobs:
         with:
           persist-credentials: false
       - name: Shell syntax
-        run: bash -n install.sh kmod/build.sh kmod/load.sh
+        run: for f in install.sh kmod/build.sh kmod/load.sh; do bash -n "$f"; done
       - name: ShellCheck
         run: shellcheck --severity=error install.sh kmod/build.sh kmod/load.sh

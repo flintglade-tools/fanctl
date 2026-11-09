@@ -62,7 +62,7 @@ The installer:
 
 ## Kernel updates
 
-At each boot, `nct6687-rs.service` rebuilds and re-signs the driver if the kernel has changed. Rust kernel modules must be built with the exact compiler that built the kernel. `kmod/build.sh` reads that version from the kernel's config and extracts the matching Fedora `rustc` RPM into a private directory. The download is over HTTPS from Fedora's Koji. Fedora keeps no signed copy of older compiler builds, so the RPM signature cannot be checked.
+At each boot, `nct6687-rs.service` rebuilds and re-signs the driver if the kernel has changed. Rust kernel modules must be built with the exact compiler that built the kernel. `kmod/build.sh` reads that version from the kernel's config and extracts the matching Fedora `rustc` RPM into a private directory. The download is the unsigned build from Fedora's Koji, over HTTPS, and its RPM signature is not checked. Koji also keeps copies signed with the Fedora key under `data/signed/<key id>/` for released builds. The service waits for `network-online.target`, and curl retries the download five times.
 
 The kernel's Rust API changes between kernel releases. If a new kernel breaks the build, `nct6687-rs.service` fails and the BIOS keeps control of the fans. Check with `journalctl -u nct6687-rs`. Without the driver loaded, `fanctl` cannot read the fans either.
 
@@ -75,8 +75,12 @@ cargo clippy --all-targets -- -D warnings
 cargo test
 ```
 
-The EC protocol follows the upstream Linux `nct6683` driver and Fred78290's out-of-tree `nct6687d` driver.
-
 ## License
 
-GPL-2.0. See [LICENSE](LICENSE).
+GPL-2.0-or-later. See [LICENSE](LICENSE).
+
+The driver's EC access and fan-configuration handshake translate the `nct6687d` driver, which derives from the upstream `nct6683` driver; both are GPL-2.0-or-later.
+
+- Copyright (C) 2020 Frederic Boltz: [nct6687.c](https://github.com/Fred78290/nct6687d/blob/main/nct6687.c)
+- Derived from nct6683 driver, Copyright (C) 2013 Guenter Roeck: [nct6683.c](https://github.com/torvalds/linux/blob/master/drivers/hwmon/nct6683.c)
+- Rewritten in Rust as a misc-device driver by Flintglade, 2026.

@@ -1,4 +1,11 @@
-// SPDX-License-Identifier: GPL-2.0
+// SPDX-License-Identifier: GPL-2.0-or-later
+//
+// Copyright (C) 2020 Frederic Boltz
+//   nct6687 driver, https://github.com/Fred78290/nct6687d/blob/main/nct6687.c
+// Derived from nct6683 driver, Copyright (C) 2013 Guenter Roeck
+//   https://github.com/torvalds/linux/blob/master/drivers/hwmon/nct6683.c
+//
+// Rewritten in Rust as a misc-device driver by Flintglade, 2026.
 
 //! Fan control for the Nuvoton NCT6687D embedded controller on the MSI PRO Z690-A WIFI (MS-7D25).
 //!
@@ -8,8 +15,8 @@
 //! exact firmware (BIOS curve) state saved before its first change. The CPU fan and pump headers never drop below 30 %, and requests for them are raised
 //! to 100 % while the CPU reads 85 °C or more.
 //!
-//! The EC protocol (page/index/data window and the fan-configuration handshake) follows the
-//! upstream `nct6683` driver and the out-of-tree `nct6687d` driver.
+//! The EC access (page/index/data window) and the fan-configuration handshake translate the
+//! `nct6687d` driver, which derives from the upstream `nct6683` driver.
 
 use core::arch::asm;
 use kernel::{

@@ -17,7 +17,7 @@ if [[ ! -x $tc/usr/bin/rustc ]]; then
     archive=$(mktemp --suffix=.cpio)
     trap 'rm -f "$rpm" "$archive"' EXIT
     command -v nm-online >/dev/null && nm-online -q -t 120 || true
-    curl -sSfL -o "$rpm" "https://kojipkgs.fedoraproject.org/packages/rust/$ver/$rel/x86_64/rust-$nvr.x86_64.rpm"
+    curl -sSfL --retry 5 --retry-all-errors -o "$rpm" "https://kojipkgs.fedoraproject.org/packages/rust/$ver/$rel/x86_64/rust-$nvr.x86_64.rpm"
     # Unpack through a file: cpio stops reading at the archive trailer, which would end a pipe
     # from rpm2cpio with SIGPIPE and fail the script under pipefail.
     rpm2cpio "$rpm" > "$archive"
